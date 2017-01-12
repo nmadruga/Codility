@@ -1,0 +1,53 @@
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+vector<int> fromIntToBinary(int input)
+{
+    vector<int> output;
+    int temp = input;
+    while(temp > 1)
+    {
+        temp % 2 == 0 ? output.push_back(0) : output.push_back(1);
+        temp /= 2;
+    }
+
+    if(temp == 1)
+        output.push_back(1);
+
+    std::reverse(output.begin(), output.end());
+
+    return output;
+}
+
+int getLongestZeroSequence(vector<int> input)
+{
+    int maxTest = 0;
+    int output = 0;
+    for( auto elem : input )
+    {
+        if(elem == 0)
+            maxTest++;
+        else
+        {
+            if(maxTest > output)
+                output = maxTest;
+
+            maxTest = 0;
+        }
+    }
+
+    return output;
+}
+
+int solution(int N)
+{
+    vector<int> bin = fromIntToBinary(N);
+    return getLongestZeroSequence( bin );
+}
+
+int main(int argc, char *argv[])
+{
+    solution(6);
+}
