@@ -1,0 +1,24 @@
+#include <vector>
+#include <map>
+#include <algorithm>
+
+using namespace std;
+
+int solution(vector<int> &A)
+{
+    map<int, int> mapa;
+    for( int i = 0; i < A.size(); ++i )
+    {
+        mapa[ A.at(i) ]++;
+        if(mapa[ A.at(i) ] == 2 )
+            mapa.erase( A.at(i) );
+    }
+
+    return (*mapa.begin()).first;
+}
+
+int main(int argc, char *argv[])
+{
+    vector<int> input = {42, 1000000000, 42};
+    solution( input );
+}
