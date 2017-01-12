@@ -1,0 +1,120 @@
+#include <algorithm>
+#include <iterator>
+#include <vector>
+
+using namespace std;
+
+int getStartValidIndex( int N, vector<int> &A, int startIndex )
+{
+    // Get first appearence of N+1 since startIndex
+    for (int i = startIndex; i < A.size(); ++i)
+    {
+        if( A.at( i ) == (N+1) )
+            return i + 1;
+    }
+
+    return 0;
+}
+
+void setCurrentMax( vector<int>& A, vector<int>& counters,
+                    int startIndex, int lastIndex )
+{
+    for (int i = startIndex; i < lastIndex-1; ++i)
+    {
+        counters.at( A.at( i )-1 )++;
+    }
+
+    auto max = *max_element( counters.begin(), counters.end() );
+    fill( counters.begin(), counters.end(), max );
+}
+
+vector<int> solution(int N, vector<int>& A)
+{
+    // Solucao 1
+//    int startIndex = 0;
+//    int lastIndex = -1;
+//    vector<int> counters( N, 0 );
+
+//    while( lastIndex != A.size() && lastIndex != 0 )
+//    {
+//        lastIndex = getStartValidIndex( N, A, startIndex );
+//        setCurrentMax( A, counters, startIndex, lastIndex );
+//        if( lastIndex != 0 )
+//            startIndex = lastIndex;
+//    }
+//    for( int i = startIndex; i < A.size(); ++i )
+//    {
+//        if( A.at(i) > 0 && A.at(i) <= N )
+//            counters.at( A.at(i)-1 )++;
+//    }
+
+    // Solucao 3
+//    int max = 0;
+//    vector<int> counters( N, 0 );
+//    vector<int>::iterator begin = A.begin();
+//    vector<int>::iterator end = begin;
+
+//    while( end != A.end() && begin != A.end() )
+//    {
+//        end = find( begin, A.end(), N+1 );
+
+//        // Se ultimo elemento é N+1
+//        if( end != A.end() )
+//        {
+//            for_each( begin, end, [&]( int elem )
+//            {
+//                counters.at( elem-1 )++;
+//            });
+
+//            max = *max_element( counters.begin(), counters.end() );
+
+//            // Itera a partir desse elemento
+//            begin = end+1;
+//        }
+//    }
+
+//    fill( counters.begin(), counters.end(), max );
+
+//    // Itera após o último N+1 aqui ou nenhum
+//    for_each( begin, A.end(), [&]( int elem )
+//    {
+//        counters.at( elem-1 )++;
+//    });
+
+//    return counters;
+
+    // Solucao 2
+    int max = 0;
+    vector<int> counters( N, 0 );
+    vector<int>::iterator begin = A.begin();
+    vector<int>::iterator end = begin;
+
+    while( end != A.end() && begin != A.end() )
+    {
+        end = find( begin, A.end(), N+1 );
+
+        // Deveria parar no anterior ao end
+        for_each( begin, end, [&]( int elem )
+        {
+            counters.at( elem-1 )++;
+        });
+
+        // Se ultimo elemento é N+1
+        if( end != A.end() )
+        {
+            max += *max_element( counters.begin(), counters.end() );
+            fill( counters.begin(), counters.end(), max );
+
+            // Itera a partir desse elemento
+            begin = end+1;
+        }
+    }
+
+    return counters;
+}
+
+int main(int argc, char *argv[])
+{
+    std::vector<int> input = {1, 1, 2, 1, 1, 2};
+    solution(1, input);
+}
